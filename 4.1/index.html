@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creating Resolved and Rejected Promises</title>
+</head>
+<body>
+    <!-- <h2>Customers</h2>
+    <div>
+        <textarea name="" id="" cols="30" rows="10"></textarea>
+    </div> -->
+    <div>
+        <button onclick="sendAsyncRequest()">Fetch Orders</button>
+    </div>
+    <script>
+        function send(url) {
+            return fetch(url).then(response => {
+                if (!response.ok) {
+                    // Promise.resolve
+                    return Promise.reject(`Not found: ${url}`);
+                }
+
+                return response.json();
+            });
+        }
+
+        function getOrders() {
+            return send('customers')
+                .then(customers => send(`orders?customerId=${customers[0].id}`));
+        }
+
+
+
+        async function sendAsyncRequest() {
+
+            try {
+                let customers = await send('customers');
+                let orders = await send(`orders?customerId=${customers[0].id}`);
+
+                console.log(orders);
+            } catch(msg) {
+                console.log(msg);
+            }
+            
+            // immediately rejects when any of the promises reject
+            // Promise.all([getOrders(), send('products')]).then(data => {
+            //     console.log(data);
+            // }).catch(console.log);
+
+            // Promise.allSettled([getOrders(), send('products')]).then(data => {
+            //     console.log(data);
+            // }).catch(console.log);
+
+            // settles when first settles
+            // Promise.race([getOrders(), send('products')]).then(data => {
+            //     console.log(data);
+            // }).catch(console.log);
+
+
+
+        }
+
+    </script>
+</body>
+</html>

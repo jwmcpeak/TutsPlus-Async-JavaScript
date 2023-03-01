@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creating Resolved and Rejected Promises</title>
+</head>
+<body>
+    <!-- <h2>Customers</h2>
+    <div>
+        <textarea name="" id="" cols="30" rows="10"></textarea>
+    </div> -->
+    <div>
+        <button onclick="sendAsyncRequest()">Fetch Orders</button>
+    </div>
+    <script>
+        function send(url) {
+            return fetch(url).then(response => {
+                if (!response.ok) {
+                    // Promise.resolve
+                    return Promise.reject(`Not found: ${url}`);
+                }
+
+                return response.json();
+            });
+        }
+
+        function sendAsyncRequest() {
+            send('customers1')
+                .then(customers => send(`orders?customerId=${customers[0].id}`))
+                .then(orders => console.log(orders))
+                .catch(console.log);
+        }
+
+    </script>
+</body>
+</html>

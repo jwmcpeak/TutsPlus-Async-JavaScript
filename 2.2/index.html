@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callback Hell</title>
+</head>
+<body>
+    <h2>Customers</h2>
+    <div>
+        <textarea name="" id="" cols="30" rows="10"></textarea>
+    </div>
+    <div>
+        <button onclick="sendAsyncRequest()">Fetch Orders</button>
+    </div>
+    <script>
+        function sendSyncRequest() {
+            let xhr = new XMLHttpRequest();
+        
+            xhr.open('GET', 'customers', false);
+            xhr.send();
+
+            let data = JSON.parse(xhr.responseText);
+
+            console.log(data);
+        }
+
+        function send(url, fn) {
+            let xhr = new XMLHttpRequest();
+            xhr.addEventListener('load', () => {
+                let data = JSON.parse(xhr.responseText);
+                
+                fn(data);
+            });
+        
+            xhr.open('GET', url);
+            xhr.send();
+        }
+
+        function sendAsyncRequest() {
+            send('customers', (customers) => {
+                send(`orders?customerId=${customers[0].id}`, (orders) => {
+                    console.log(orders);
+                });
+            });
+        }
+        
+    </script>
+</body>
+</html>

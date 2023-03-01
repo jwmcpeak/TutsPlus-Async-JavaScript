@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creating Resolved and Rejected Promises</title>
+</head>
+<body>
+    <!-- <h2>Customers</h2>
+    <div>
+        <textarea name="" id="" cols="30" rows="10"></textarea>
+    </div> -->
+    <div>
+        <button onclick="sendAsyncRequest()">Fetch Orders</button>
+    </div>
+    <script>
+        function send(url) {
+            return fetch(url).then(response => {
+                if (!response.ok) {
+                    // Promise.resolve
+                    return Promise.reject(`Not found: ${url}`);
+                }
+
+                return response.json();
+            });
+        }
+
+        async function sendAsyncRequest() {
+            try {
+
+                let customers = await send('customers');
+
+                // customers.forEach(async (customer) => {
+                //     console.log(`Sending request for customer: ${customer.id}`);
+                //     let orders = await send(`orders?customerId=${customer.id}`);
+                //     console.log(`Waiting for request for customer: ${customer.id}`);
+
+                //     console.log(orders);
+                // });
+
+                // console.log('done');
+
+                // for (let customer of customers) {
+                //     console.log(`Sending request for customer: ${customer.id}`);
+                //     let orders = await send(`orders?customerId=${customer.id}`);
+                //     console.log(`Waiting for request for customer: ${customer.id}`);
+
+                //     console.log(orders);
+                // }
+
+                // console.log('done');
+
+
+                let allOrders = await Promise.all(
+                    customers.map(customer => send(`orders?customerId=${customer.id}`))
+                );
+
+                allOrders.forEach(orders => console.log(orders));
+
+                console.log('done');
+
+
+            } catch(msg) {
+
+                console.log(msg);
+                
+            }
+        }
+
+    </script>
+</body>
+</html>
